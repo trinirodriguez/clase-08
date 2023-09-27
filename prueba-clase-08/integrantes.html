@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37 | EVALUACIÓN Nº2</title>
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">Trinidad Rodríguez</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="integrantes.html" selected>INTEGRANTES</option>
+                <option value="openweather.html">OPEN WEATHER</option>
+                <option value="picture.html">PICTURE OF THE DAY</option>
+                <option value="sismico.html">SÍSMICO</option>
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="Géminis" />Géminis</div>
+            <div><input type="radio" name="selecciona" value="Libra" />Libra</div>
+            <div><input type="radio" name="selecciona" value="Acuario" />Acuario</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/profesorfaco/dno037-2023-2/main/clase-07/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                console.log(datos);
+                signos = [];
+                datos.forEach((x) => {
+                    if(x.zodiaco.signo !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${x.zodiaco.signo
+                        }</p></div></article>`;
+                        signos.push(x.zodiaco.signo);
+                       
+                    }
+                });
+
+
+    const counts = {};
+    signos.forEach((x) => {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+    console.log(counts)
+
+
+
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                //Lo que sigue lo saqué de https://www.vogue.mx/
+
+                if (valor == "Géminis") {
+                    about =
+                        "<em>Regido por Mercurio, el planeta de la comunicación, las personas con este signo zodiacal les gusta hablar, y sus pensamientos y opiniones marcan fuertemente quiénes son. Los del signo Géminis tienen curiosidad por el mundo que los rodea y se mueven con rapidez por la vida, intentando aprender lo máximo posible. Sin embargo, los Géminis a veces pueden tener fama de indecisos, cuando en realidad nadie sabe todo lo que pasa por su cabeza.";
+
+                } else if (valor == "Libra") {
+                    about =
+                        "<em>Regido por Venus, las personas de este signo zodiacal, son encantadoras por naturaleza, y hay algo en ellas que hace que a la gente le guste estar cerca. Los del signo Libra, le dan prioridad a las relaciones en su vida, es muy importante para ellos relacionarse con los demás. También se esfuerzan por conseguir el equilibrio, y buscan asegurarse de que todo el mundo esté atendido.";
+                } else if (valor == "Acuario") {
+                    about =
+                        "<em>Regida por Saturno y Urano, eres capaz de canalizar tu espíritu especial e innovador en un trabajo productivo. También valoras tu independencia y necesitas tener cierta libertad en tu vida para hacer lo que quieras. Te desenvuelves bien en entornos sociales y tienes el potencial de ser un líder de tu comunidad, pero a menudo te sientes como un ser extraño o necesitas más tiempo para estar a solas.";
+              
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.signo) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
